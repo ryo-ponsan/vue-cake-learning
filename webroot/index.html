@@ -6,9 +6,27 @@
     </head>
     <body>
         <h1 id="title">空っぽページ</h1>
+        <!-- Vue が操作する領域 (V-1) -->
+        <div id="app">{{ msg }}</div>
 
         <!-- jQuery CDN -->
         <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+        <!-- Vue 3 CDN  (V-0)-->
+        <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+        <script>
+            // Vue 3 の Composition API を分割代入で取り出し
+            const { createApp, ref } = Vue;
+
+            // アプリ作成 → #app にマウント
+            createApp({
+                setup() {
+                    // リアクティブな変数を定義
+                    const msg = ref("Hello Vue 🎈");
+                    return { msg }; // テンプレに渡す
+                },
+            }).mount("#app");
+        </script>
 
         <!-- ここからステップごとに書き足します -->
         <script>
