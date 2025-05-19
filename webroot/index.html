@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8" />
+        <title>jQuery Hands-on</title>
+    </head>
+    <body>
+        <h1 id="title">空っぽページ</h1>
+
+        <!-- jQuery CDN -->
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+        <!-- ここからステップごとに書き足します -->
+        <script>
+            /* ステップ用の空ブロック */
+            $(function () {
+                $("#title").text("jQuery Ready!");
+                console.log("jQuery Ready!");
+                $("body").append(
+                    '<button class="msg">クリックで赤くなる</button>'
+                );
+                console.log("メッセージを追加しました");
+                $(".msg").on("click", function () {
+                    $(this).css("color", "red");
+                    console.log("クリックされました");
+                });
+                // --- J-4 : 配列から <li> を量産 ---
+                // --- J-4 : 配列から <li> を量産 ---
+                const fruits = ["🍎 Apple", "🍊 Orange", "🍌 Banana"];
+
+                // <ul> を 1 個だけ追加
+                $("body").append('<ul id="fruitList"></ul>');
+
+                // $.each でループして <li> を挿入
+                $.each(fruits, function (_, v) {
+                    $("#fruitList").append(`<li>${v}</li>`);
+                });
+
+                // === J-5 : Ajax GET =========================
+                $.getJSON("/api/messages")
+                    .done(function (data) {
+                        // 200 系ならここ
+                        console.table(data);
+                    })
+                    .fail(function (jqXHR) {
+                        // 404 ならここ
+                        console.warn(
+                            "GET /api/messages failed → status",
+                            jqXHR.status
+                        );
+                    });
+
+                // === J-6 : Ajax POST ========================
+                // 入力フォーム＆ボタンをページ末尾に追加
+                $("body").append(`
+  <h2>メッセージ送信テスト</h2>
+  <input id="msgInput" placeholder="送信文字列">
+  <button id="sendBtn">送信</button>
+`);
+
+                $("#sendBtn").on("click", function () {
+                    const text = $("#msgInput").val().trim();
+                    if (!text) return alert("入力してください");
+
+                    $.post("/api/messages", { text }) // フォームエンコードで送信
+                        .done(function () {
+                            alert("POST 成功（API 未実装なら 404 を見るはず）");
+                        })
+                        .fail(function () {
+                            alert("POST 失敗（想定内）");
+                        });
+                });
+            });
+        </script>
+    </body>
+</html>
